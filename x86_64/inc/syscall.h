@@ -66,6 +66,10 @@
 	_syscall $SYS_ioctl
 .endm
 
+.macro sys_link
+	_syscall $SYS_link
+.endm
+
 .macro sys_mkdir
 	_syscall $SYS_mkdir
 .endm
@@ -88,6 +92,10 @@
 
 .macro sys_rt_sigaction
 	_syscall $SYS_rt_sigaction
+.endm
+
+.macro sys_unlink
+	_syscall $SYS_unlink
 .endm
 
 .macro sys_write
