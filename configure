@@ -1,0 +1,260 @@
+#!/bin/sh
+#
+# Configure script for Nucleus Utilities
+#
+
+prog_name=${0}
+
+CC_list="gcc clang cc"
+configure_options="$@"
+
+#
+# Default values
+#
+srcdir=
+builddir=
+prefix=/usr/local
+exec_prefix='${prefix}'
+bindir='${exec_prefix}/bin'
+sysconfdir='${prefix}/etc'
+libdir='${exec_prefix}/lib'
+includedir='${prefix}/include'
+datarootdir='${prefix}/share'
+mandir='${datarootdir}/man'
+program_prefix=
+build=
+host=
+host_cpu=
+
+CONFFILE=conftest.c
+
+#
+# Helper functions
+#
+usage() {
+cat << EOF
+Usage: $0 [OPTION]... [VAR=VALUE]...
+
+To assign environment variables (e.g. CC, CFLAGS, etc), specify them as
+VAR=VALUE. See below for descriptions of some of the useful variables.
+
+Defaults for options are specified in brackets.
+
+Installation directories:
+  --prefix=PREFIX	architecture-independent installation prefix
+			[/usr/local]
+  --exec-prefix=EPREFIX	architecture-dependent installation prefix [PREFIX]
+
+Fine tuning of the installation directories:
+  --bindir=DIR		user executables [EPREFIX/bin]
+  --sysconfdir=DIR	read-only single-machine data [PREFIX/etc]
+  --libdir=DIR		object code libraries [EPREFIX/lib]
+  --includedir=DIR	include files [PREFIX/include]
+  --datarootdir=DIR	read-only architecture-independent data root
+			[PREFIX/share]
+  --mandir=DIR		man documentation [DATAROOTDIR/man]
+
+Program names:
+  --program-prefix=PREFIX	prepend PREFIX to the installed program names
+
+System types:
+  --build=BUILD		configure for building on BUILD [guessed]
+  --host=HOST		cross-compile to run on HOST [BUILD]
+
+Some influential environment variables:
+  CC		C compiler command [detected]
+  CFLAGS	C compiler flags, e.g. -Werror
+  CPPFLAGS	C preprocessor flags, e.g. -I<include dir>
+  LD		Linker command [detected]
+
+Use these variables to override the choices made by 'configure'.
+EOF
+}
+
+fail() {
+	printf "%s: %s\n" "$prog_name" "$*"
+	exit 1
+}
+
+checking() {
+	printf "checking %s... " "$*"
+}
+
+result() {
+	printf "%s\n" "$*"
+}
+
+check_tool() {
+	eval "saved_tool=\"\${$1}\""
+	if test -z $saved_tool; then
+		for tool_name ; do
+			if test -n "$host"; then
+				tool_name="${host}-${tool_name}"
+			fi
+			if type "${tool_name}" > /dev/null 2>&1; then
+				eval "$1=\"\${tool_name}\""
+			else
+				eval "$1=\"unknown\""
+			fi
+		done
+	fi
+}
+
+run_cmd() {
+	$1 > /dev/null 2>&1
+}
+
+add_cflag() {
+	checking "whether compiler accepts $1"
+	if $CC $CFLAGS $1 -c -o /dev/null $CONFFILE > /dev/null 2>&1 ; then
+		result "yes"
+		CFLAGS="$CFLAGS $1"
+		eval "CFLAGS=\${CFLAGS# }"
+	else
+		result "no"
+		fail "compiler does not accept $1"
+	fi
+}
+
+create_file() {
+	printf "creating %s\n" "$*"
+}
+
+#
+# Start of script
+#
+for arg ; do
+	case "$arg" in
+		--help|-h) usage ;;
+		--prefix=*) prefix=${arg#*=} ;;
+		--exec-prefix=*) exec_prefix=${arg#*=} ;;
+		--bindir=*) bindir=${arg#*=} ;;
+		--sysconfdir=*) sysconfdir=${arg#*=} ;;
+		--libdir=*) libdir=${arg#*=} ;;
+		--includedir=*) includedir=${arg#*=} ;;
+		--datarootdir=*) datarootdir=${arg#*=} ;;
+		--mandir=*) mandir=${arg#*=} ;;
+		--program-prefix=*) program_prefix=${arg#*=} ;;
+		--build=*) build=${arg#*=} ;;
+		--host=*) host=${arg#*=} ;;
+		-*) fail "unknown option '$arg'"; exit 1 ;;
+		CC=*) CC=${arg#*=} ;;
+		CFLAGS=*) CFLAGS=${arg#*=} ;;
+		CPPFLAGS=*) CPPFLAGS=${arg#*=} ;;
+		LD=*) LD=${arg#*=} ;;
+		RANLIB=*) RANLIB=${arg#*=} ;;
+		*=*) ;;
+		*) fail "unknown argument '$arg'" ;;
+	esac
+done
+
+#
+# Get the source dir for out-of-tree builds
+#
+srcdir="${0%/configure}"
+abs_srcdir="$(cd $srcdir && pwd)" || fail "invalid source directory '$srcdir'"
+if test "$abs_srcdir" = "$(pwd)"; then
+	srcdir="."
+fi
+builddir="."
+
+#
+# Find an appropriate C compiler
+#
+checking "for compiler"
+for tryCC in $CC_list; do
+	check_tool "CC" "$tryCC"
+done
+result "$CC"
+if test "x$CC" = "xunknown"; then
+	fail "could not find a supported compiler"
+fi
+
+#
+# Check that the compiler can actually assemble programs
+#
+checking "whether the compiler works"
+cat << EOF > $CONFFILE
+int main (void) {
+	return 0;
+}
+EOF
+if run_cmd "$CC -c -o /dev/null $CONFFILE" ; then
+	result "yes"
+else
+	result "no"
+	fail "compiler cannot create executables"
+fi
+
+#
+# Check other tools
+#
+checking "for linker"
+check_tool "LD" "ld"
+result "$LD"
+if test "x$LD" = "xunknown"; then
+	fail "could not find linker"
+fi
+
+checking "for ranlib"
+check_tool "RANLIB" "ranlib"
+result "$RANLIB"
+if test "x$RANLIB" = "xunknown"; then
+	fail "could not find ranlib"
+fi
+
+#
+# Check the host architecture
+#
+checking "host system type"
+if test -z "$host"; then
+	host=$($CC -dumpmachine 2> /dev/null) || host="unknown"
+fi
+result "$host"
+
+case $host in
+	x86_64-*) host_cpu="x86_64" ;;
+	unknown) fail "unable to detect host architecture; try $0 --host=..." ;;
+	*) fail "unknown or unsupported host '$host'" ;;
+esac
+
+#
+# Miscellaneous checks
+#
+add_cflag "-Wall"
+add_cflag "-Werror"
+rm -f $CONFFILE
+
+Version=$(cat ${srcdir}/Version)
+
+#
+# Output config files
+#
+create_file "Makefile"
+cat << EOF > Makefile
+# Command used to configure and generate:
+configure_options = $configure_options
+
+CC = $CC
+CFLAGS = $CFLAGS
+CPPFLAGS = $CPPFLAGS
+LD = $LD
+RANLIB = $RANLIB
+srcdir = $srcdir
+builddir = $builddir
+prefix = $prefix
+exec_prefix = $exec_prefix
+bindir = $bindir
+sysconfdir = $sysconfdir
+libdir = $libdir
+includedir = $includedir
+datarootdir = $datarootdir
+mandir = $mandir
+program_prefix = $program_prefix
+build = $build
+host = $host
+host_cpu = $host_cpu
+
+EOF
+
+cat $srcdir/Makefile.in >> Makefile

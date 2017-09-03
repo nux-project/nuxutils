@@ -1,0 +1,75 @@
+#
+# Makefile for Nucleus Utilities
+# You must run ./configure to generate needed configuration
+#
+
+PROGS =	false \
+	link \
+	true \
+	unlink
+
+PROGS_OBJ = $(PROGS:=.o)
+PROGS_SRC = $(PROGS:=.S)
+
+#
+# Verbose options
+#
+V_default = 0
+LD_verbose = ${LD_verbose_${V}}
+LD_verbose_ = ${LD_verbose_${V_default}}
+LD_verbose_0 = @echo "  LD  $@";
+LD_verbose_1 =
+CC_verbose = ${CC_verbose_${V}}
+CC_verbose_ = ${CC_verbose_${V_default}}
+CC_verbose_0 = @echo "  CC  $@";
+CC_verbose_1 =
+RANLIB_verbose = ${RANLIB_verbose_${V}}
+RANLIB_verbose_ = ${RANLIB_verbose_${V_default}}
+RANLIB_verbose_0 = @echo "  RANLIB  $@";
+RANLIB_verbose_1 =
+
+VPATH = $(srcdir)/$(host_cpu)
+
+assembler.cmd = ${CC_verbose}${CC} ${CFLAGS} ${CPPFLAGS} -I$(srcdir)/$(host_cpu) -c -o $@ $<
+linker.cmd = ${LD_verbose}${LD} ${LDFLAGS} -o $@ $<
+
+.SUFFIXES:
+.SUFFIXES: .S .o
+
+.PHONY: all clean clean.progs clean.obj
+
+#
+# Makefile rules start here
+#
+all: $(PROGS)
+
+.S.o:
+	$(assembler.cmd)
+
+$(PROGS_OBJ): $(srcdir)/$(host_cpu)/inc/syscall.h $(srcdir)/$(host_cpu)/inc/sysdep.h Makefile
+
+false: false.o
+	$(linker.cmd)
+
+link: link.o
+	$(linker.cmd)
+
+true: true.o
+	$(linker.cmd)
+
+unlink: unlink.o
+	$(linker.cmd)
+
+clean: clean.progs clean.obj
+
+clean.progs:
+	$(RM) -rf $(PROGS)
+
+clean.obj:
+	$(RM) -rf $(PROGS_OBJ)
+
+distclean: clean
+	$(RM) -rf Makefile
+
+Makefile: $(srcdir)/configure $(srcdir)/Makefile.in
+	$(srcdir)/configure $(configure_options)
