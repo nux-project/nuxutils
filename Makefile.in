@@ -3,7 +3,8 @@
 # You must run ./configure to generate needed configuration
 #
 
-PROGS =	false \
+PROGS = echo \
+	false \
 	link \
 	true \
 	unlink
@@ -28,10 +29,10 @@ RANLIB_verbose_ = ${RANLIB_verbose_${V_default}}
 RANLIB_verbose_0 = @echo "  RANLIB  $@";
 RANLIB_verbose_1 =
 
-VPATH = $(srcdir)/$(host_cpu)
+VPATH = $(srcdir)/$(host_cpu):$(srcdir)/$(host_cpu)/lib
 
 assembler.cmd = ${CC_verbose}${CC} ${CFLAGS} ${CPPFLAGS} -I$(srcdir)/$(host_cpu) -c -o $@ $<
-linker.cmd = ${LD_verbose}${LD} ${LDFLAGS} -o $@ $<
+linker.cmd = ${LD_verbose}${LD} ${LDFLAGS} -o $@ $^
 
 .SUFFIXES:
 .SUFFIXES: .S .o
@@ -47,6 +48,9 @@ all: $(PROGS)
 	$(assembler.cmd)
 
 $(PROGS_OBJ): $(srcdir)/$(host_cpu)/inc/syscall.h $(srcdir)/$(host_cpu)/inc/sysdep.h Makefile
+
+echo: echo.o strlen.o
+	$(linker.cmd)
 
 false: false.o
 	$(linker.cmd)
