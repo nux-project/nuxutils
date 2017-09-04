@@ -6,11 +6,15 @@
 PROGS = echo \
 	false \
 	link \
+	printenv \
 	true \
 	unlink
 
 PROGS_OBJ = $(PROGS:=.o)
 PROGS_SRC = $(PROGS:=.S)
+
+LIB_SRC = strlen.S
+LIB_OBJ = $(LIB_SRC:.S=.o)
 
 #
 # Verbose options
@@ -37,7 +41,7 @@ linker.cmd = ${LD_verbose}${LD} ${LDFLAGS} -o $@ $^
 .SUFFIXES:
 .SUFFIXES: .S .o
 
-.PHONY: all clean clean.progs clean.obj
+.PHONY: all clean clean.lib clean.progs clean.obj
 
 #
 # Makefile rules start here
@@ -58,13 +62,19 @@ false: false.o
 link: link.o
 	$(linker.cmd)
 
+printenv: printenv.o strlen.o
+	$(linker.cmd)
+
 true: true.o
 	$(linker.cmd)
 
 unlink: unlink.o
 	$(linker.cmd)
 
-clean: clean.progs clean.obj
+clean: clean.lib clean.progs clean.obj
+
+clean.lib:
+	$(RM) -rf $(LIB_OBJ)
 
 clean.progs:
 	$(RM) -rf $(PROGS)
