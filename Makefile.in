@@ -8,7 +8,8 @@ PROGS = echo \
 	link \
 	printenv \
 	true \
-	unlink
+	unlink \
+	yes
 
 PROGS_OBJ = $(PROGS:=.o)
 PROGS_SRC = $(PROGS:=.S)
@@ -69,6 +70,9 @@ true: true.o
 	$(linker.cmd)
 
 unlink: unlink.o
+	$(linker.cmd)
+
+yes: yes.o strlen.o
 	$(linker.cmd)
 
 clean: clean.lib clean.progs clean.obj
