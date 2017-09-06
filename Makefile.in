@@ -3,7 +3,8 @@
 # You must run ./configure to generate needed configuration
 #
 
-PROGS = echo \
+PROGS = cat \
+	echo \
 	false \
 	link \
 	printenv \
@@ -54,6 +55,9 @@ all: $(PROGS)
 	$(assembler.cmd)
 
 $(PROGS_OBJ): $(srcdir)/$(host_cpu)/inc/syscall.h $(srcdir)/$(host_cpu)/inc/sysdep.h Makefile
+
+cat: cat.o strlen.o
+	$(linker.cmd)
 
 echo: echo.o strlen.o
 	$(linker.cmd)

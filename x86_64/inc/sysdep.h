@@ -19,6 +19,10 @@
 #define STDOUT_FILENO 1
 #define STDERR_FILENO 2
 
+#define O_RDONLY 00
+#define O_WRONLY 01
+#define O_RDWR 02
+
 #define EXIT_SUCCESS 0
 #define EXIT_FAILURE 1
 
