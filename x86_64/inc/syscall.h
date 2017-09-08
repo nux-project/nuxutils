@@ -74,6 +74,10 @@
 	_syscall $SYS_mkdir
 .endm
 
+.macro sys_nanosleep
+	_syscall $SYS_nanosleep
+.endm
+
 .macro sys_open
 	_syscall $SYS_open
 .endm
