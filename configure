@@ -12,6 +12,7 @@ configure_options="$@"
 # Default values
 #
 srcdir=
+top_srcdir=
 builddir=
 prefix=/usr/local
 exec_prefix='${prefix}'
@@ -151,10 +152,10 @@ done
 #
 # Get the source dir for out-of-tree builds
 #
-srcdir="${0%/configure}"
-abs_srcdir="$(cd $srcdir && pwd)" || fail "invalid source directory '$srcdir'"
+top_srcdir="${0%/configure}"
+abs_srcdir="$(cd $top_srcdir && pwd)" || fail "invalid source directory '$top_srcdir'"
 if test "$abs_srcdir" = "$(pwd)"; then
-	srcdir="."
+	top_srcdir="."
 fi
 builddir="."
 
@@ -225,7 +226,7 @@ add_cflag "-Wall"
 add_cflag "-Werror"
 rm -f $CONFFILE
 
-Version=$(cat ${srcdir}/Version)
+Version=$(cat ${top_srcdir}/Version)
 
 #
 # Output config files
@@ -240,7 +241,8 @@ CFLAGS = $CFLAGS
 CPPFLAGS = $CPPFLAGS
 LD = $LD
 RANLIB = $RANLIB
-srcdir = $srcdir
+srcdir = $top_srcdir/$host_cpu
+top_srcdir = $top_srcdir
 builddir = $builddir
 prefix = $prefix
 exec_prefix = $exec_prefix
@@ -257,4 +259,4 @@ host_cpu = $host_cpu
 
 EOF
 
-cat $srcdir/Makefile.in >> Makefile
+cat $top_srcdir/Makefile.in >> Makefile

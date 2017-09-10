@@ -26,6 +26,10 @@ LIB_OBJ = $(LIB_SRC:.S=.o)
 # Verbose options
 #
 V_default = 0
+verbose = ${verbose_${V}}
+verbose_ = ${verbose_${V_default}}
+verbose_0 = @
+verbose_1 =
 LD_verbose = ${LD_verbose_${V}}
 LD_verbose_ = ${LD_verbose_${V_default}}
 LD_verbose_0 = @echo "  LD  $@";
@@ -39,9 +43,9 @@ RANLIB_verbose_ = ${RANLIB_verbose_${V_default}}
 RANLIB_verbose_0 = @echo "  RANLIB  $@";
 RANLIB_verbose_1 =
 
-VPATH = $(srcdir)/$(host_cpu):$(srcdir)/$(host_cpu)/lib
+VPATH = $(srcdir):$(srcdir)/lib
 
-assembler.cmd = ${CC_verbose}${CC} ${CFLAGS} ${CPPFLAGS} -I$(srcdir)/$(host_cpu) -c -o $@ $<
+assembler.cmd = ${CC_verbose}${CC} ${CFLAGS} ${CPPFLAGS} -I$(srcdir) -c -o $@ $<
 linker.cmd = ${LD_verbose}${LD} ${LDFLAGS} -o $@ $^
 
 .SUFFIXES:
@@ -57,7 +61,7 @@ all: $(PROGS)
 .S.o:
 	$(assembler.cmd)
 
-$(PROGS_OBJ): $(srcdir)/$(host_cpu)/inc/syscall.h $(srcdir)/$(host_cpu)/inc/sysdep.h Makefile
+$(PROGS_OBJ): $(srcdir)/inc/syscall.h $(srcdir)/inc/sysdep.h Makefile
 
 cat: cat.o strlen.o
 	$(linker.cmd)
@@ -109,5 +113,5 @@ clean.obj:
 distclean: clean
 	$(RM) -rf Makefile
 
-Makefile: $(srcdir)/configure $(srcdir)/Makefile.in
-	$(srcdir)/configure $(configure_options)
+Makefile: $(top_srcdir)/configure $(top_srcdir)/Makefile.in
+	$(top_srcdir)/configure $(configure_options)
