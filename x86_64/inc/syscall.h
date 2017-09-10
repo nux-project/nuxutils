@@ -94,7 +94,7 @@
 	_syscall $SYS_rmdir
 .endm
 
-.macro sys_rt_sigaction
+.macro sys_sigaction
 	_syscall $SYS_rt_sigaction
 .endm
 

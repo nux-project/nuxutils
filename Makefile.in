@@ -11,6 +11,7 @@ PROGS = cat \
 	printenv \
 	pwd \
 	sleep \
+	tee \
 	true \
 	unlink \
 	yes
@@ -80,6 +81,9 @@ pwd: pwd.o strlen.o
 	$(linker.cmd)
 
 sleep: sleep.o strlen.o
+	$(linker.cmd)
+
+tee: tee.o strlen.o
 	$(linker.cmd)
 
 true: true.o
