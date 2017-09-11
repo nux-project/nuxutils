@@ -126,7 +126,7 @@ create_file() {
 #
 for arg ; do
 	case "$arg" in
-		--help|-h) usage ;;
+		--help|-h) usage; exit 0 ;;
 		--prefix=*) prefix=${arg#*=} ;;
 		--exec-prefix=*) exec_prefix=${arg#*=} ;;
 		--bindir=*) bindir=${arg#*=} ;;
@@ -241,6 +241,7 @@ CFLAGS = $CFLAGS
 CPPFLAGS = $CPPFLAGS
 LD = $LD
 RANLIB = $RANLIB
+VERSION = $Version
 srcdir = $top_srcdir/$host_cpu
 top_srcdir = $top_srcdir
 builddir = $builddir
