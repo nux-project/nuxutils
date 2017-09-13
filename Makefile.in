@@ -106,16 +106,16 @@ yes: yes.o strlen.o
 clean: clean.lib clean.progs clean.obj
 
 clean.lib:
-	$(RM) -rf $(LIB_OBJ)
+	$(RM) $(LIB_OBJ)
 
 clean.progs:
-	$(RM) -rf $(PROGS)
+	$(RM) $(PROGS)
 
 clean.obj:
-	$(RM) -rf $(PROGS_OBJ)
+	$(RM) $(PROGS_OBJ)
 
 distclean: clean
-	$(RM) -rf Makefile
+	$(RM) Makefile
 
 Makefile: $(top_srcdir)/configure $(top_srcdir)/Makefile.in
 	$(top_srcdir)/configure $(configure_options)

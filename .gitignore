@@ -1,1 +1,15 @@
 *.o
+Makefile
+cat
+echo
+env
+false
+link
+logname
+printenv
+pwd
+sleep
+tee
+true
+unlink
+yes
