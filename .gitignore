@@ -1,6 +1,7 @@
 *.o
 Makefile
 cat
+chroot
 echo
 env
 false

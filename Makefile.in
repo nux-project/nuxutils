@@ -4,6 +4,7 @@
 #
 
 PROGS = cat \
+	chroot \
 	echo \
 	env \
 	false \
@@ -65,6 +66,9 @@ all: $(PROGS)
 $(PROGS_OBJ): $(srcdir)/inc/syscall.h $(srcdir)/inc/sysdep.h Makefile
 
 cat: cat.o strlen.o
+	$(linker.cmd)
+
+chroot: chroot.o
 	$(linker.cmd)
 
 echo: echo.o strlen.o
