@@ -5,6 +5,7 @@
 
 PROGS = cat \
 	echo \
+	env \
 	false \
 	link \
 	logname \
@@ -67,6 +68,9 @@ cat: cat.o strlen.o
 	$(linker.cmd)
 
 echo: echo.o strlen.o
+	$(linker.cmd)
+
+env: env.o strlen.o
 	$(linker.cmd)
 
 false: false.o
