@@ -10,6 +10,7 @@ PROGS = cat \
 	false \
 	link \
 	logname \
+	mkdir \
 	printenv \
 	pwd \
 	sleep \
@@ -84,6 +85,9 @@ link: link.o
 	$(linker.cmd)
 
 logname: logname.o strlen.o
+	$(linker.cmd)
+
+mkdir: mkdir.o strlen.o
 	$(linker.cmd)
 
 printenv: printenv.o strlen.o
