@@ -10,6 +10,7 @@ logname
 mkdir
 printenv
 pwd
+rmdir
 sleep
 tee
 true

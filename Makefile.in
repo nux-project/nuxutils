@@ -13,6 +13,7 @@ PROGS = cat \
 	mkdir \
 	printenv \
 	pwd \
+	rmdir \
 	sleep \
 	tee \
 	true \
@@ -94,6 +95,9 @@ printenv: printenv.o strlen.o
 	$(linker.cmd)
 
 pwd: pwd.o strlen.o
+	$(linker.cmd)
+
+rmdir: rmdir.o strlen.o
 	$(linker.cmd)
 
 sleep: sleep.o strlen.o
