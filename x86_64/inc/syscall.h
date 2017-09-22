@@ -50,6 +50,14 @@
 	_syscall $SYS_exit
 .endm
 
+.macro sys_fsync
+	_syscall $SYS_fsync
+.endm
+
+.macro sys_fdatasync
+	_syscall $SYS_fdatasync
+.endm
+
 .macro sys_getcwd
 	_syscall $SYS_getcwd
 .endm
@@ -96,6 +104,14 @@
 
 .macro sys_sigaction
 	_syscall $SYS_rt_sigaction
+.endm
+
+.macro sys_sync
+	_syscall $SYS_sync
+.endm
+
+.macro sys_syncfs
+	_syscall $SYS_syncfs
 .endm
 
 .macro sys_unlink

@@ -12,6 +12,7 @@ printenv
 pwd
 rmdir
 sleep
+sync
 tee
 true
 unlink

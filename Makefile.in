@@ -15,6 +15,7 @@ PROGS = cat \
 	pwd \
 	rmdir \
 	sleep \
+	sync \
 	tee \
 	true \
 	unlink \
@@ -101,6 +102,9 @@ rmdir: rmdir.o strlen.o
 	$(linker.cmd)
 
 sleep: sleep.o strlen.o
+	$(linker.cmd)
+
+sync: sync.o strlen.o
 	$(linker.cmd)
 
 tee: tee.o strlen.o
