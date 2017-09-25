@@ -12,8 +12,7 @@
    file, you can obtain one at http://mozilla.org/MPL/2.0/.
 */
 
-#include "inc/syscall.h"
-#include "inc/errno.h"
+#include "sysdep.h"
 
 .section .text
 	.global _start
@@ -21,8 +20,7 @@
 _start:
 	movq	(%rsp), %rbx	/* %rbx = argc */
 	cmpq	$3, %rbx
-	jl	.Ltoo_few_arg
-	jg	.Ltoo_many_arg
+	jne	.Lerror
 
 	movq	16(%rsp), %rdi	/* get argv[1] */
 	movq	24(%rsp), %rsi	/* get argv[2] */
@@ -33,12 +31,8 @@ _start:
 	movl	$0, %edi
 	sys_exit
 
-.Ltoo_few_arg:
-	movl	$EINVAL, %edi
-	sys_exit
-
-.Ltoo_many_arg:
-	movl	$E2BIG, %edi
+.Lerror:
+	movl	$EXIT_FAILURE, %edi
 	sys_exit
 
 .Llink_fail:

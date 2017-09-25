@@ -1,5 +1,7 @@
 *.o
+*.a
 Makefile
+lib/Makefile
 cat
 chroot
 echo

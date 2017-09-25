@@ -15,18 +15,17 @@
 #ifndef __SYSDEP_H__
 #define __SYSDEP_H__
 
+#if linux
+#include "asm/fcntl-linux.h"
+#elif __FreeBSD__
+#include "asm/fcntl-freebsd.h"
+#endif
+
+#include "syscall.h"
+
 #define STDIN_FILENO 0
 #define STDOUT_FILENO 1
 #define STDERR_FILENO 2
-
-#define O_RDONLY 00
-#define O_WRONLY 01
-#define O_RDWR 02
-
-#define O_CREAT 0100
-#define O_EXCL 0200
-#define O_TRUNC 01000
-#define O_APPEND 02000
 
 #define EXIT_SUCCESS 0
 #define EXIT_FAILURE 1

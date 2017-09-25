@@ -12,7 +12,7 @@
    file, you can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "inc/syscall.h"
+#include "sysdep.h"
 
 #if !defined(EXIT_STATUS)
 #define EXIT_STATUS 0

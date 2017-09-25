@@ -12,8 +12,7 @@
    file, you can obtain one at http://mozilla.org/MPL/2.0/.
 */
 
-#include "inc/sysdep.h"
-#include "inc/syscall.h"
+#include "sysdep.h"
 
 .section .data
 

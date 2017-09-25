@@ -24,8 +24,8 @@ PROGS = cat \
 PROGS_OBJ = $(PROGS:=.o)
 PROGS_SRC = $(PROGS:=.S)
 
-LIB_SRC = strlen.S
-LIB_OBJ = $(LIB_SRC:.S=.o)
+LIB = lib/libutil.a
+LIB_CPPFLAGS = -I$(top_srcdir)/lib/$(host_cpu)
 
 #
 # Verbose options
@@ -43,41 +43,42 @@ CC_verbose = ${CC_verbose_${V}}
 CC_verbose_ = ${CC_verbose_${V_default}}
 CC_verbose_0 = @echo "  CC  $@";
 CC_verbose_1 =
-RANLIB_verbose = ${RANLIB_verbose_${V}}
-RANLIB_verbose_ = ${RANLIB_verbose_${V_default}}
-RANLIB_verbose_0 = @echo "  RANLIB  $@";
-RANLIB_verbose_1 =
 
-VPATH = $(srcdir):$(srcdir)/lib
+VPATH = $(srcdir)
 
-assembler.cmd = ${CC_verbose}${CC} ${CFLAGS} ${CPPFLAGS} -I$(srcdir) -c -o $@ $<
-linker.cmd = ${LD_verbose}${LD} ${LDFLAGS} -o $@ $^
+assembler.cmd = ${CC_verbose}${CC} ${CFLAGS} ${CPPFLAGS} $(LIB_CPPFLAGS) -c -o $@ $<
+linker.cmd = ${LD_verbose}${CC} -nostdlib -o $@ $^
 
 .SUFFIXES:
 .SUFFIXES: .S .o
 
-.PHONY: all clean clean.lib clean.progs clean.obj
+.PHONY: all clean clean.lib clean.progs clean.obj distclean distclean.lib
 
 #
 # Makefile rules start here
 #
-all: $(PROGS)
+all: $(LIB) $(PROGS)
+
+$(LIB): lib/Makefile
+	$(verbose)$(MAKE) -C lib
 
 .S.o:
 	$(assembler.cmd)
 
-$(PROGS_OBJ): $(srcdir)/inc/syscall.h $(srcdir)/inc/sysdep.h Makefile
+$(PROGS_OBJ): $(srcdir)/syscall.h $(srcdir)/sysdep.h Makefile
 
-cat: cat.o strlen.o
+$(PROGS): $(LIB)
+
+cat: cat.o
 	$(linker.cmd)
 
 chroot: chroot.o
 	$(linker.cmd)
 
-echo: echo.o strlen.o
+echo: echo.o
 	$(linker.cmd)
 
-env: env.o strlen.o
+env: env.o
 	$(linker.cmd)
 
 false: false.o
@@ -86,28 +87,28 @@ false: false.o
 link: link.o
 	$(linker.cmd)
 
-logname: logname.o strlen.o
+logname: logname.o
 	$(linker.cmd)
 
-mkdir: mkdir.o strlen.o
+mkdir: mkdir.o
 	$(linker.cmd)
 
-printenv: printenv.o strlen.o
+printenv: printenv.o
 	$(linker.cmd)
 
-pwd: pwd.o strlen.o
+pwd: pwd.o
 	$(linker.cmd)
 
-rmdir: rmdir.o strlen.o
+rmdir: rmdir.o
 	$(linker.cmd)
 
-sleep: sleep.o strlen.o
+sleep: sleep.o
 	$(linker.cmd)
 
-sync: sync.o strlen.o
+sync: sync.o
 	$(linker.cmd)
 
-tee: tee.o strlen.o
+tee: tee.o
 	$(linker.cmd)
 
 true: true.o
@@ -116,13 +117,13 @@ true: true.o
 unlink: unlink.o
 	$(linker.cmd)
 
-yes: yes.o strlen.o
+yes: yes.o
 	$(linker.cmd)
 
 clean: clean.lib clean.progs clean.obj
 
 clean.lib:
-	$(RM) $(LIB_OBJ)
+	$(verbose)$(MAKE) -C lib clean
 
 clean.progs:
 	$(RM) $(PROGS)
@@ -130,8 +131,14 @@ clean.progs:
 clean.obj:
 	$(RM) $(PROGS_OBJ)
 
-distclean: clean
+distclean: distclean.lib clean.progs clean.obj
 	$(RM) Makefile
 
+distclean.lib:
+	$(verbose)$(MAKE) -C lib distclean
+
 Makefile: $(top_srcdir)/configure $(top_srcdir)/Makefile.in
+	$(top_srcdir)/configure $(configure_options)
+
+lib/Makefile: $(top_srcdir)/configure $(top_srcdir)/lib/Makefile.in
 	$(top_srcdir)/configure $(configure_options)

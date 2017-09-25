@@ -1,0 +1,59 @@
+#
+# Makefile for Nucleus Utility Library
+# You must run ./configure an the top-level source dir to generate
+#
+
+LIB = libutil.a
+LIB_SRC = strlen.S
+LIB_OBJ = $(LIB_SRC:.S=.o)
+
+#
+# Verbose options
+#
+V_default = 0
+verbose = ${verbose_${V}}
+verbose_ = ${verbose_${V_default}}
+verbose_0 = @
+verbose_1 =
+AR_verbose = ${AR_verbose_${V}}
+AR_verbose_ = ${AR_verbose_${V_default}}
+AR_verbose_0 = @echo "  AR  $@";
+AR_verbose_1 =
+CC_verbose = ${CC_verbose_${V}}
+CC_verbose_ = ${CC_verbose_${V_default}}
+CC_verbose_0 = @echo "  CC  $@";
+CC_verbose_1 =
+
+VPATH = $(srcdir)/string
+
+assembler.cmd = ${CC_verbose}${CC} ${CFLAGS} ${CPPFLAGS} -I$(top_srcdir)/$(host_cpu) -I$(srcdir) -c -o $@ $<
+ar.cmd = ${AR_verbose}${AR} -rcs $@ $^
+
+.SUFFIXES:
+.SUFFIXES: .S .o
+
+.PHONY: all clean clean.lib clean.obj distclean
+
+#
+# Makefile rules start here
+#
+all: $(LIB)
+
+$(LIB): $(LIB_OBJ)
+	$(ar.cmd)
+
+$(LIB_OBJ): $(top_srcdir)/$(host_cpu)/sysdep.h Makefile
+
+.S.o:
+	$(assembler.cmd)
+
+clean: clean.lib clean.obj
+
+clean.lib:
+	$(RM) $(LIB)
+
+clean.obj:
+	$(RM) $(LIB_OBJ)
+
+distclean: clean
+	$(RM) Makefile

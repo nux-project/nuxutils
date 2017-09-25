@@ -12,9 +12,7 @@
    file, you can obtain one at http://mozilla.org/MPL/2.0/.
 */
 
-#include "inc/errno.h"
-#include "inc/sysdep.h"
-#include "inc/syscall.h"
+#include "sysdep.h"
 
 #define BUFFER_SIZE 1024
 
@@ -66,7 +64,7 @@ getopt:
 	movl	$.Linvalid, %esi
 	movl	$.Linvalid_len, %edx
 	sys_write
-	movl	$EINVAL, %edi
+	movl	$EXIT_FAILURE, %edi
 	sys_exit
 
 .cat_stdin:

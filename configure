@@ -143,7 +143,7 @@ for arg ; do
 		CFLAGS=*) CFLAGS=${arg#*=} ;;
 		CPPFLAGS=*) CPPFLAGS=${arg#*=} ;;
 		LD=*) LD=${arg#*=} ;;
-		RANLIB=*) RANLIB=${arg#*=} ;;
+		AR=*) AR=${arg#*=} ;;
 		*=*) ;;
 		*) fail "unknown argument '$arg'" ;;
 	esac
@@ -198,9 +198,9 @@ if test "x$LD" = "xunknown"; then
 fi
 
 checking "for ranlib"
-check_tool "RANLIB" "ranlib"
-result "$RANLIB"
-if test "x$RANLIB" = "xunknown"; then
+check_tool "AR" "ar"
+result "$AR"
+if test "x$AR" = "xunknown"; then
 	fail "could not find ranlib"
 fi
 
@@ -229,7 +229,7 @@ rm -f $CONFFILE
 Version=$(cat ${top_srcdir}/Version)
 
 #
-# Output config files
+# Output configured files
 #
 create_file "Makefile"
 cat << EOF > Makefile
@@ -240,7 +240,7 @@ CC = $CC
 CFLAGS = $CFLAGS
 CPPFLAGS = $CPPFLAGS
 LD = $LD
-RANLIB = $RANLIB
+AR = $AR
 VERSION = $Version
 srcdir = $top_srcdir/$host_cpu
 top_srcdir = $top_srcdir
@@ -261,3 +261,35 @@ host_cpu = $host_cpu
 EOF
 
 cat $top_srcdir/Makefile.in >> Makefile
+
+create_file "lib/Makefile"
+mkdir lib > /dev/null 2>&1
+cat << EOF > lib/Makefile
+# Command used to configure and generate:
+configure_options = $configure_options
+
+CC = $CC
+CFLAGS = $CFLAGS
+CPPFLAGS = $CPPFLAGS
+LD = $LD
+RANLIB = $RANLIB
+VERSION = $Version
+srcdir = $top_srcdir/../lib/$host_cpu
+top_srcdir = $top_srcdir/..
+builddir = $builddir
+prefix = $prefix
+exec_prefix = $exec_prefix
+bindir = $bindir
+sysconfdir = $sysconfdir
+libdir = $libdir
+includedir = $includedir
+datarootdir = $datarootdir
+mandir = $mandir
+program_prefix = $program_prefix
+build = $build
+host = $host
+host_cpu = $host_cpu
+
+EOF
+
+cat $top_srcdir/lib/Makefile.in >> lib/Makefile
