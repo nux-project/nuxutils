@@ -5,6 +5,7 @@ lib/Makefile
 basename
 cat
 chroot
+dirname
 echo
 env
 false

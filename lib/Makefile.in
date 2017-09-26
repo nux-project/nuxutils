@@ -5,6 +5,7 @@
 
 LIB = libutil.a
 LIB_SRC = basename.S \
+	dirname.S \
 	strlen.S
 LIB_OBJ = $(LIB_SRC:.S=.o)
 

@@ -6,6 +6,7 @@
 PROGS = basename \
 	cat \
 	chroot \
+	dirname \
 	echo \
 	env \
 	false \
@@ -77,6 +78,9 @@ cat: cat.o
 	$(linker.cmd)
 
 chroot: chroot.o
+	$(linker.cmd)
+
+dirname: dirname.o
 	$(linker.cmd)
 
 echo: echo.o
