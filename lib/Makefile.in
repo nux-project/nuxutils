@@ -28,11 +28,11 @@ CC_verbose_1 =
 
 VPATH = $(srcdir)/string:$(srcdir)/libgen
 
-assembler.cmd = ${CC_verbose}${CC} ${CFLAGS} ${CPPFLAGS} -I$(top_srcdir)/$(host_cpu) -I$(srcdir) -c -o $@ $<
+assemble.cmd = ${CC_verbose}${CC} ${CFLAGS} ${CPPFLAGS} -I$(top_srcdir)/$(host_cpu) -I$(srcdir) -c -o $@ $<
 ar.cmd = ${AR_verbose}${AR} -rcs $@ $^
 
 .SUFFIXES:
-.SUFFIXES: .S .o
+.SUFFIXES: .S .o .a
 
 .PHONY: all clean clean.lib clean.obj distclean
 
@@ -47,7 +47,7 @@ $(LIB): $(LIB_OBJ)
 $(LIB_OBJ): $(top_srcdir)/$(host_cpu)/sysdep.h Makefile
 
 .S.o:
-	$(assembler.cmd)
+	$(assemble.cmd)
 
 clean: clean.lib clean.obj
 

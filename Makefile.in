@@ -37,10 +37,10 @@ verbose = ${verbose_${V}}
 verbose_ = ${verbose_${V_default}}
 verbose_0 = @
 verbose_1 =
-LD_verbose = ${LD_verbose_${V}}
-LD_verbose_ = ${LD_verbose_${V_default}}
-LD_verbose_0 = @echo "  LD  $@";
-LD_verbose_1 =
+LINK_verbose = ${LINK_verbose_${V}}
+LINK_verbose_ = ${LINK_verbose_${V_default}}
+LINK_verbose_0 = @echo "  LINK  $@";
+LINK_verbose_1 =
 CC_verbose = ${CC_verbose_${V}}
 CC_verbose_ = ${CC_verbose_${V_default}}
 CC_verbose_0 = @echo "  CC  $@";
@@ -48,8 +48,8 @@ CC_verbose_1 =
 
 VPATH = $(srcdir)
 
-assembler.cmd = ${CC_verbose}${CC} ${CFLAGS} ${CPPFLAGS} $(LIB_CPPFLAGS) -c -o $@ $<
-linker.cmd = ${LD_verbose}${CC} -nostdlib -o $@ $^
+assemble.cmd = ${CC_verbose}${CC} ${CFLAGS} ${CPPFLAGS} $(LIB_CPPFLAGS) -c -o $@ $<
+link.cmd = ${LINK_verbose}${CC} -nostdlib -o $@ $^
 
 .SUFFIXES:
 .SUFFIXES: .S .o
@@ -59,78 +59,78 @@ linker.cmd = ${LD_verbose}${CC} -nostdlib -o $@ $^
 #
 # Makefile rules start here
 #
-all: $(LIB) $(PROGS)
+all: all.recursive $(PROGS)
 
-$(LIB): lib/Makefile
+all.recursive:
 	$(verbose)$(MAKE) -C lib
 
 .S.o:
-	$(assembler.cmd)
+	$(assemble.cmd)
 
 $(PROGS_OBJ): $(srcdir)/syscall.h $(srcdir)/sysdep.h Makefile
 
 $(PROGS): $(LIB)
 
 basename: basename.o
-	$(linker.cmd)
+	$(link.cmd)
 
 cat: cat.o
-	$(linker.cmd)
+	$(link.cmd)
 
 chroot: chroot.o
-	$(linker.cmd)
+	$(link.cmd)
 
 dirname: dirname.o
-	$(linker.cmd)
+	$(link.cmd)
 
 echo: echo.o
-	$(linker.cmd)
+	$(link.cmd)
 
 env: env.o
-	$(linker.cmd)
+	$(link.cmd)
 
 false: false.o
-	$(linker.cmd)
+	$(link.cmd)
 
 link: link.o
-	$(linker.cmd)
+	$(link.cmd)
 
 logname: logname.o
-	$(linker.cmd)
+	$(link.cmd)
 
 mkdir: mkdir.o
-	$(linker.cmd)
+	$(link.cmd)
 
 printenv: printenv.o
-	$(linker.cmd)
+	$(link.cmd)
 
 pwd: pwd.o
-	$(linker.cmd)
+	$(link.cmd)
 
 rmdir: rmdir.o
-	$(linker.cmd)
+	$(link.cmd)
 
 sleep: sleep.o
-	$(linker.cmd)
+	$(link.cmd)
 
 sync: sync.o
-	$(linker.cmd)
+	$(link.cmd)
 
 tee: tee.o
-	$(linker.cmd)
+	$(link.cmd)
 
 true: true.o
-	$(linker.cmd)
+	$(link.cmd)
 
 unlink: unlink.o
-	$(linker.cmd)
+	$(link.cmd)
 
 yes: yes.o
-	$(linker.cmd)
+	$(link.cmd)
 
-clean: clean.lib clean.progs clean.obj
+clean: clean.recursive clean.progs clean.obj
 
-clean.lib:
+clean.recursive:
 	$(verbose)$(MAKE) -C lib clean
 
 clean.progs:
@@ -139,10 +139,10 @@ clean.progs:
 clean.obj:
 	$(RM) $(PROGS_OBJ)
 
-distclean: distclean.lib clean.progs clean.obj
+distclean: distclean.recursive clean.progs clean.obj
 	$(RM) Makefile
 
-distclean.lib:
+distclean.recursive:
 	$(verbose)$(MAKE) -C lib distclean
 
 Makefile: $(top_srcdir)/configure $(top_srcdir)/Makefile.in

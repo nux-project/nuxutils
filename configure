@@ -66,7 +66,7 @@ Some influential environment variables:
   CC		C compiler command [detected]
   CFLAGS	C compiler flags, e.g. -Werror
   CPPFLAGS	C preprocessor flags, e.g. -I<include dir>
-  LD		Linker command [detected]
+  AR		Archiver command [detected]
 
 Use these variables to override the choices made by 'configure'.
 EOF
@@ -142,7 +142,6 @@ for arg ; do
 		CC=*) CC=${arg#*=} ;;
 		CFLAGS=*) CFLAGS=${arg#*=} ;;
 		CPPFLAGS=*) CPPFLAGS=${arg#*=} ;;
-		LD=*) LD=${arg#*=} ;;
 		AR=*) AR=${arg#*=} ;;
 		*=*) ;;
 		*) fail "unknown argument '$arg'" ;;
@@ -190,14 +189,7 @@ fi
 #
 # Check other tools
 #
-checking "for linker"
-check_tool "LD" "ld"
-result "$LD"
-if test "x$LD" = "xunknown"; then
-	fail "could not find linker"
-fi
-
-checking "for ranlib"
+checking "for ar"
 check_tool "AR" "ar"
 result "$AR"
 if test "x$AR" = "xunknown"; then
@@ -232,14 +224,13 @@ Version=$(cat ${top_srcdir}/Version)
 # Output configured files
 #
 create_file "Makefile"
-cat << EOF > Makefile
+cat - $top_srcdir/Makefile.in << EOF > Makefile
 # Command used to configure and generate:
 configure_options = $configure_options
 
 CC = $CC
 CFLAGS = $CFLAGS
 CPPFLAGS = $CPPFLAGS
-LD = $LD
 AR = $AR
 VERSION = $Version
 srcdir = $top_srcdir/$host_cpu
@@ -260,19 +251,18 @@ host_cpu = $host_cpu
 
 EOF
 
-cat $top_srcdir/Makefile.in >> Makefile
-
 create_file "lib/Makefile"
-mkdir lib > /dev/null 2>&1
-cat << EOF > lib/Makefile
+if test ! -d lib; then
+	mkdir lib
+fi
+cat - $top_srcdir/lib/Makefile.in << EOF > lib/Makefile
 # Command used to configure and generate:
 configure_options = $configure_options
 
 CC = $CC
 CFLAGS = $CFLAGS
 CPPFLAGS = $CPPFLAGS
-LD = $LD
-RANLIB = $RANLIB
+AR = $AR
 VERSION = $Version
 srcdir = $top_srcdir/../lib/$host_cpu
 top_srcdir = $top_srcdir/..
@@ -291,5 +281,3 @@ host = $host
 host_cpu = $host_cpu
 
 EOF
-
-cat $top_srcdir/lib/Makefile.in >> lib/Makefile
