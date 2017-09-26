@@ -17,109 +17,58 @@
 
 #include <sys/syscall.h>
 
-.macro _syscall _syscall_num:req
-	movl	\_syscall_num, %eax
+#define __syscall(num) \
+	movl	$num, %eax; \
 	syscall
-.endm
 
-.macro sys_access
-	_syscall $SYS_access
-.endm
+#define sys_access __syscall(SYS_access)
 
-.macro sys_chdir
-	_syscall $SYS_chdir
-.endm
+#define sys_chdir __syscall(SYS_chdir)
 
-.macro sys_chroot
-	_syscall $SYS_chroot
-.endm
+#define sys_chroot __syscall(SYS_chroot)
 
-.macro sys_close
-	_syscall $SYS_close
-.endm
+#define sys_close __syscall(SYS_close)
 
-.macro sys_creat
-	_syscall $SYS_creat
-.endm
+#define sys_creat __syscall(SYS_creat)
 
-.macro sys_execve
-	_syscall $SYS_execve
-.endm
+#define sys_execve __syscall(SYS_execve)
 
-.macro sys_exit
-	_syscall $SYS_exit
-.endm
+#define sys_exit __syscall(SYS_exit)
 
-.macro sys_fsync
-	_syscall $SYS_fsync
-.endm
+#define sys_fsync __syscall(SYS_fsync)
 
-.macro sys_fdatasync
-	_syscall $SYS_fdatasync
-.endm
+#define sys_fdatasync __syscall(SYS_fdatasync)
 
-.macro sys_getcwd
-	_syscall $SYS_getcwd
-.endm
+#define sys_getcwd __syscall(SYS_getcwd)
 
-.macro sys_getpid
-	_syscall $SYS_getpid
-.endm
+#define sys_getpid __syscall(SYS_getpid)
 
-.macro sys_gettimeofday
-	_syscall $SYS_gettimeofday
-.endm
+#define sys_gettimeofday __syscall(SYS_gettimeofday)
 
-.macro sys_ioctl
-	_syscall $SYS_ioctl
-.endm
+#define sys_ioctl __syscall(SYS_ioctl)
 
-.macro sys_link
-	_syscall $SYS_link
-.endm
+#define sys_link __syscall(SYS_link)
 
-.macro sys_mkdir
-	_syscall $SYS_mkdir
-.endm
+#define sys_mkdir __syscall(SYS_mkdir)
 
-.macro sys_nanosleep
-	_syscall $SYS_nanosleep
-.endm
+#define sys_nanosleep __syscall(SYS_nanosleep)
 
-.macro sys_open
-	_syscall $SYS_open
-.endm
+#define sys_open __syscall(SYS_open)
 
-.macro sys_read
-	_syscall $SYS_read
-.endm
+#define sys_read __syscall(SYS_read)
 
-.macro sys_readlink
-	_syscall $SYS_readlink
-.endm
+#define sys_readlink __syscall(SYS_readlink)
 
-.macro sys_rmdir
-	_syscall $SYS_rmdir
-.endm
+#define sys_rmdir __syscall(SYS_rmdir)
 
-.macro sys_sigaction
-	_syscall $SYS_rt_sigaction
-.endm
+#define sys_sigaction __syscall(SYS_rt_sigaction)
 
-.macro sys_sync
-	_syscall $SYS_sync
-.endm
+#define sys_sync __syscall(SYS_sync)
 
-.macro sys_syncfs
-	_syscall $SYS_syncfs
-.endm
+#define sys_syncfs __syscall(SYS_syncfs)
 
-.macro sys_unlink
-	_syscall $SYS_unlink
-.endm
+#define sys_unlink __syscall(SYS_unlink)
 
-.macro sys_write
-	_syscall $SYS_write
-.endm
+#define sys_write __syscall(SYS_write)
 
 #endif /* __SYSCALL_H__ */
