@@ -4,7 +4,8 @@
 #
 
 LIB = libutil.a
-LIB_SRC = strlen.S
+LIB_SRC = basename.S \
+	strlen.S
 LIB_OBJ = $(LIB_SRC:.S=.o)
 
 #
@@ -24,7 +25,7 @@ CC_verbose_ = ${CC_verbose_${V_default}}
 CC_verbose_0 = @echo "  CC  $@";
 CC_verbose_1 =
 
-VPATH = $(srcdir)/string
+VPATH = $(srcdir)/string:$(srcdir)/libgen
 
 assembler.cmd = ${CC_verbose}${CC} ${CFLAGS} ${CPPFLAGS} -I$(top_srcdir)/$(host_cpu) -I$(srcdir) -c -o $@ $<
 ar.cmd = ${AR_verbose}${AR} -rcs $@ $^

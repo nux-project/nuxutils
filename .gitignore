@@ -2,6 +2,7 @@
 *.a
 Makefile
 lib/Makefile
+basename
 cat
 chroot
 echo
