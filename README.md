@@ -1,7 +1,7 @@
-Nucleus Utilities
+Nux Utilities
 =================
 
-Nucleus utilities is meant as a POSIX-compliant implementation of the GNU Core
+Nux Utilities is meant as a POSIX-compliant implementation of the GNU Core
 Utilities written in assembly language. These utilities are meant to be
 portable across multiple operating systems, including, but not limited to,
 Linux and the BSD family (FreeBSD, OpenBSD, etc).

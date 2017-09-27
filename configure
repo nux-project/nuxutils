@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Configure script for Nucleus Utilities
+# Configure script for Nux Utilities
 #
 
 prog_name=${0}

@@ -5,7 +5,7 @@
    Written by: Stefan Bidigaray
    Date: January 2017
 
-   This file is part of Nucleus C Standard Library.
+   This file is part of Nux C Standard Library.
 
    This Source Code Form is subject to the terms of the Mozilla Public
    License, v. 2.0. If a copy of the MPL was not distributed with this
