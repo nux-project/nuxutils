@@ -35,7 +35,7 @@ POSIX Compliance
 ----------------
 
 The project aims to implement, at a minimum, the functionality descibed in the
-[POSIX.1-2008 Specification][http://pubs.opengroup.org/onlinepubs/9699919799/].
+[POSIX.1-2008 Specification](http://pubs.opengroup.org/onlinepubs/9699919799/).
 
 Installation
 ------------
