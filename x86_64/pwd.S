@@ -43,7 +43,7 @@ getopt:
 	incl	%ebx
 	test	%rsi, %rsi
 	jz	pwd
-	cmpb	$'-, (%rsi)
+	cmpb	$'-', (%rsi)
 	jne	.Lexit_error
 	incq	%rsi
 .Lread_opt:
@@ -51,12 +51,12 @@ getopt:
 	test	%al, %al
 	jz	getopt
 .Lopt_logical:
-	cmpb	$'L, %al
+	cmpb	$'L', %al
 	jne	.Lopt_physical
 	movb	$0, %ah	/* Default... simply clear flag */
 	jmp	.Lread_opt
 .Lopt_physical:
-	cmpb	$'P, %al
+	cmpb	$'P', %al
 	jne	.Lunknown_opt
 	movb	$1, %ah
 	jmp	.Lread_opt
@@ -103,7 +103,7 @@ pwd:
 	movq	%rsp, %rbx
 .Lprint_pwd:
 	call	strlen
-	movb	$'\n, (%rbx, %rax)
+	movb	$'\n', (%rbx, %rax)
 	incl	%eax
 	movl	$STDOUT_FILENO, %edi
 	movq	%rbx, %rsi

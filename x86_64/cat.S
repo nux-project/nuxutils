@@ -35,7 +35,7 @@ getopt:
 	incl	%ebx
 	testq	%rdi, %rdi
 	jz	.cat_stdin
-	cmpb	$'-, (%rdi)
+	cmpb	$'-', (%rdi)
 	jne	.Lopen_file
 	incq	%rdi
 .Lread_opt:
@@ -47,7 +47,7 @@ getopt:
 /* "-" option = stdin */
 	je	.cat_stdin
 .Lopt_u:
-	cmpb	$'u, %al
+	cmpb	$'u', %al
 /* ignore '-u' */
 	je	.Lread_opt
 .Linvalid_opt:
@@ -71,7 +71,7 @@ getopt:
 	movl	$STDIN_FILENO, %r15d
 	jmp	.Lread_file
 cat:
-	cmpb	$'-, (%rdi)
+	cmpb	$'-', (%rdi)
 	jne	.Lopen_file
 	cmpb	$0, 1(%rdi)
 	je	.cat_stdin

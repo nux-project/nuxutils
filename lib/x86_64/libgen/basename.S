@@ -14,7 +14,7 @@
 
 #include "sysdep.h"
 
-#define DIR_SEPARATOR '/
+#define DIR_SEPARATOR '/'
 
 .section .rodata
 

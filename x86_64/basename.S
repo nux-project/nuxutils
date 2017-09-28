@@ -50,7 +50,7 @@ _start:
 	movl	%ebx, %edx
 .Lprint:
 	movq	%rbp, %rsi
-	movb	$'\n, (%rsi, %rdx)
+	movb	$'\n', (%rsi, %rdx)
 	incl	%edx
 	movl	$STDOUT_FILENO, %edi
 	sys_write

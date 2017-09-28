@@ -32,21 +32,21 @@ _start:
 	/* %rsp = argv */
 	leaq	8(%rsp, %rcx, 8), %rbp	/* %rbp = envp */
 	popq	%rsi	/* %rsi = *argv++ */
-	movb	$'\n, %r15b	/* load new line character */
+	movb	$'\n', %r15b	/* load new line character */
 
 getopt:
 	movq	(%rsp), %rdi
 	test	%rdi, %rdi
 	jz	printenv	/* No variables, print everything */
 /* If *argv != "-0", then print environment variables specified */
-	cmpb	$'-, (%rdi)
+	cmpb	$'-', (%rdi)
 	jne	getenv
 	movb	1(%rdi), %al
 	testb	%al, %al	/* Check for unknown options */
 	jz	getenv
-	cmpb	$'0, %al
+	cmpb	$'0', %al
 	jne	.Lunknown_opt
-	movb	$'\0, %r15b
+	movb	$'\0', %r15b
 	addq	$PTR_SIZE, %rsp
 	jmp	getopt	/* Check next value */
 .Lunknown_opt:
@@ -82,7 +82,7 @@ getenv:
 	repe cmpsb
 	test	%ecx, %ecx
 	jnz	.Lgetenv
-	cmpb	$'=, (%rdi)
+	cmpb	$'=', (%rdi)
 	jne	.Lgetenv
 	incq	%rdi
 	movq	%rdi, %r12	/* save %rdi */

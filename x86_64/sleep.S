@@ -49,9 +49,9 @@ _start:
 	lodsb
 	test	%al, %al
 	jz	.Ls_implicit
-	cmpb	$'9, %al
+	cmpb	$'9', %al
 	jg	.Ls
-	subb	$'0, %al
+	subb	$'0', %al
 	js	.Linvalid_suffix
 	imulq	$10, %rdx
 	jo	.Lexit_error	/* Overflow means number is too large */
@@ -78,7 +78,7 @@ _start:
 	movl	$EXIT_FAILURE, %edi
 	sys_exit
 .Ls:
-	cmpb	$'s, %al
+	cmpb	$'s', %al
 	jne	.Lm
 .Lend_arg:
 	lodsb
@@ -89,17 +89,17 @@ _start:
 	xorq	%rdx, %rdx
 	jmp	.Lread_argv
 .Lm:
-	cmpb	$'m, %al
+	cmpb	$'m', %al
 	jne	.Lh
 	imulq	$MINUTE, %rdx
 	jmp	.Lend_arg
 .Lh:
-	cmpb	$'h, %al
+	cmpb	$'h', %al
 	jne	.Ld
 	imulq	$HOUR, %rdx
 	jmp	.Lend_arg
 .Ld:
-	cmpb	$'d, %al
+	cmpb	$'d', %al
 	jne	.Linvalid_suffix
 	imulq	$DAY, %rdx
 	jmp	.Lend_arg

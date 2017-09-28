@@ -47,7 +47,7 @@ getopt:
 	movq	16(%rbp, %rbx, 8), %rsi
 	test	%rsi, %rsi
 	jz	open_files
-	cmpb	$'-, (%rsi)
+	cmpb	$'-', (%rsi)
 	jne	open_files
 	incl	%ebx
 	incq	%rsi
@@ -56,12 +56,12 @@ getopt:
 	test	%al, %al
 	jz	getopt
 .Lopt_append:
-	cmpb	$'a, %al
+	cmpb	$'a', %al
 	jne	.Lopt_ignore_int
 	movl	$.Lopen_flags_append, (.Lopen_flags)
 	jmp	.Lread_opt
 .Lopt_ignore_int:
-	cmpb	$'i, %al
+	cmpb	$'i', %al
 	jne	.Lunknown_opt
 	movl	$SIGINT, %edi
 	movl	$.Lsig_ign, %esi

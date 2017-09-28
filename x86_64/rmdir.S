@@ -35,7 +35,7 @@ getopt:
 	movq	(%rsp, %rbx, 8), %rsi	/* get argv[i] */
 	test	%rsi, %rsi
 	jz	.Linvalid_arg
-	cmpb	$'-, (%rsi)
+	cmpb	$'-', (%rsi)
 	jne	rmdir
 	incq	%rsi
 	incl	%ebx
@@ -44,7 +44,7 @@ getopt:
 	test	%al, %al
 	jz	getopt
 .Lopt_parents:
-	cmpb	$'p, %al
+	cmpb	$'p', %al
 	sete	(.Lparent)
 	je	.Lread_opt
 .Lunknown_opt:

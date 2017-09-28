@@ -39,7 +39,7 @@ getopt:
 	movq	(%rsp, %rbx, 8), %rsi	/* get argv[i] */
 	test	%rsi, %rsi
 	jz	sync
-	cmpb	$'-, (%rsi)
+	cmpb	$'-', (%rsi)
 	jne	fsync
 	incq	%rsi
 	incl	%ebx
@@ -47,11 +47,11 @@ getopt:
 	lodsb
 	test	%al, %al
 	jz	getopt
-	cmpb	$'d, %al
+	cmpb	$'d', %al
 	seteb	(.Lfile_data)
 	je	.Lread_opt
 #if defined(SYS_syncfs)
-	cmpb	$'f, %al
+	cmpb	$'f', %al
 	seteb	(.Lfile_system)
 	je	.Lread_opt
 #endif

@@ -38,7 +38,7 @@ getopt:
 	movq	(%rsp, %rbx, 8), %rsi	/* get next argv[i] */
 	test	%rsi, %rsi
 	jz	.Linvalid_arg
-	cmpb	$'-, (%rsi)
+	cmpb	$'-', (%rsi)
 	jne	mkdir
 	incl	%ebx
 	incq	%rsi
@@ -47,7 +47,7 @@ getopt:
 	test	%al, %al
 	jz	getopt
 .Lopt_m:
-	cmpb	$'m, %al
+	cmpb	$'m', %al
 	jne	.Lopt_p
 	movq	(%rsp, %rbx, 8), %rdi
 	test	%rdi ,%rdi
@@ -56,7 +56,7 @@ getopt:
 	incl	%ebx
 	jmp	getopt
 .Lopt_p:
-	cmpb	$'p, %al
+	cmpb	$'p', %al
 	seteb	(.Lparent)
 	je	.Lread_opt
 .Lunknown_opt:
@@ -85,14 +85,14 @@ mkdir:
 	jz	.Lmkdir
 	jmp	.Lmkdir_get_parent
 .Lmkdir_make_parent:
-	cmpb	$'/, %al
+	cmpb	$'/', %al
 	jne	.Lmkdir_get_parent
 	movb	$0, -1(%rsi)
 	movq	%rsi, %rdx
 	movl	(.Lmode), %esi
 	sys_mkdir
 	movq	%rdx, %rsi
-	movb	$'/, -1(%rsi)
+	movb	$'/', -1(%rsi)
 .Lmkdir_get_parent:
 	lodsb
 	test	%al, %al

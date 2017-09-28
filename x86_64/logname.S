@@ -42,14 +42,14 @@ getenv:
 	repe cmpsb
 	test	%ecx, %ecx
 	jnz	getenv
-	cmpb	$'=, (%rdi)
+	cmpb	$'=', (%rdi)
 	jne	getenv
 	incq	%rdi
 	movq	%rdi, %r15	/* Save %rdi, again */
 	call	strlen
 	movl	$STDOUT_FILENO, %edi
 	movq	%r15, %rsi	/* Prep for sys_write */
-	movb	$'\n, (%rsi, %rax)
+	movb	$'\n', (%rsi, %rax)
 	incl	%eax
 	movl	%eax, %edx
 	sys_write

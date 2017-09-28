@@ -17,7 +17,7 @@
 .section .data
 
 .Lnewline:
-	.byte	'\n
+	.byte	'\n'
 
 .section .text
 	.global _start
@@ -29,9 +29,9 @@ _start:
 .Lgetopt:
 	test	%rdi, %rdi
 	jz	.Lwrite_newline	/* echo called with no arguments */
-	cmpb	$'-, (%rdi)
+	cmpb	$'-', (%rdi)
 	jne	.Lecho_argv
-	cmpb	$'n, 1(%rdi)
+	cmpb	$'n', 1(%rdi)
 	jne	.Lecho_argv
 	cmpb	$0, 2(%rdi)
 	jne	.Lecho_argv
@@ -51,7 +51,7 @@ get_argv:
 	movl	%eax, %edx
 	cmpq	(%rsp), %rbx
 	je	.Lwrite
-	movb	$' , (%rsi, %rax)
+	movb	$' ', (%rsi, %rax)
 	incl	%edx
 .Lwrite:
 	sys_write

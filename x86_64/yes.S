@@ -42,7 +42,7 @@ _start:
 	call	strlen
 	movq	(%rsp, %rbx, PTR_SIZE), %rdi
 	incl	%ebx
-	movb	$' , (%rdi, %rax)
+	movb	$' ', (%rdi, %rax)
 	leal	1(%eax, %edx), %edx
 .Largv_next:
 	movq	(%rsp, %rbx, PTR_SIZE), %rdi	/* %rdi = argv[i] */
@@ -50,6 +50,6 @@ _start:
 	jnz	.Largv_prep
 .Largv_write_setup:
 	movq	(%rsp), %rsi
-	movb	$'\n, -1(%rsi, %rdx)
+	movb	$'\n', -1(%rsi, %rdx)
 	movl	$STDOUT_FILENO, %edi
 	jmp	.Lprint_loop

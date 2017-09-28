@@ -14,7 +14,7 @@
 
 #include "sysdep.h"
 
-#define NEWLINE '\n
+#define NEWLINE '\n'
 
 .section .data
 
@@ -32,8 +32,8 @@ _start:
 
 .Lprint_dot:
 /* This is really abusing the stack... */
-	movb	$'., (%rsp)
-	movb	$'\n, 1(%rsp)
+	movb	$'.', (%rsp)
+	movb	$'\n', 1(%rsp)
 	movq	%rsp, %rsi
 	movl	$2, %edx
 	jmp	.Lwrite_out
@@ -44,7 +44,7 @@ dirname_loop:
 /* dirname() may return a constant ".". Check that this is not the
    case before adding the newline character at the end.
  */
-	cmpb	$'., (%rdi)
+	cmpb	$'.', (%rdi)
 	jne	.Ladd_newline
 	cmpb	$0, 1(%rdi)
 	je	.Lprint_dot	

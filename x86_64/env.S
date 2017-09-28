@@ -39,11 +39,11 @@ getopt:
 	test	%rsi, %rsi
 	jz	printenv	/* No variables */
 	lodsb
-	cmpb	$'-, %al
+	cmpb	$'-', %al
 	jne	env	/* We have a command */
 	incl	%ebx
 	lodsb
-	cmpb	$'i, %al
+	cmpb	$'i', %al
 	je	.Lignore_env
 	cmpb	$0, %al
 	je	.Lignore_env
@@ -72,7 +72,7 @@ printenv:
 	call	strlen
 	movl	$STDOUT_FILENO, %edi
 	movq	(%r15, %rbx, 8), %rsi
-	movb	$'\n, (%rsi, %rax)
+	movb	$'\n', (%rsi, %rax)
 	leaq	1(%eax), %rdx
 	sys_write
 	incl	%ebx
@@ -95,7 +95,7 @@ env:
 /* Check for modified environment by checking for '=' */
 	movq	(%rbp, %rbx, 8), %rdi
 	movl	%r12d, %ecx
-	movb	$'=, %al
+	movb	$'=', %al
 	repne scasb
 	jne	exec
 	xorl	%edx, %edx
@@ -107,7 +107,7 @@ putenv:
 	repe cmpsb
 	test	%ecx, %ecx
 	jnz	.Lputenv_next
-	cmpb	$'=, (%rdi)
+	cmpb	$'=', (%rdi)
 	jne	.Lputenv_next
 	movq	(%rbp, %rbx, 8), %rsi
 	movq	%rsi, (%r15, %rdx, 8)
