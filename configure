@@ -86,18 +86,14 @@ result() {
 }
 
 check_tool() {
-	eval "saved_tool=\"\${$1}\""
-	if test -z $saved_tool; then
-		for tool_name ; do
-			if test -n "$host"; then
-				tool_name="${host}-${tool_name}"
-			fi
-			if type "${tool_name}" > /dev/null 2>&1; then
-				eval "$1=\"\${tool_name}\""
-			else
-				eval "$1=\"unknown\""
-			fi
-		done
+	tool_name="$2"
+	if test -n "$host"; then
+		tool_name="${host}-${tool_name}"
+	fi
+	if type "${tool_name}" > /dev/null 2>&1; then
+		eval "$1=\"\${tool_name}\""
+	else
+		eval "$1=\"unknown\""
 	fi
 }
 
@@ -162,9 +158,14 @@ builddir="."
 # Find an appropriate C compiler
 #
 checking "for compiler"
-for tryCC in $CC_list; do
-	check_tool "CC" "$tryCC"
-done
+if test -z $CC; then
+	for tryCC in $CC_list; do
+		check_tool "CC" "$tryCC"
+		if test "x$CC" != "xunknown"; then
+			break
+		fi
+	done
+fi
 result "$CC"
 if test "x$CC" = "xunknown"; then
 	fail "could not find a supported compiler"
