@@ -7,7 +7,8 @@ LIB = libutil.a
 LIB_SRC = basename.S \
 	dirname.S \
 	errno.S \
-	strlen.S
+	strlen.S \
+	strtol.S
 LIB_OBJ = $(LIB_SRC:.S=.o)
 
 #
@@ -27,7 +28,7 @@ CC_verbose_ = ${CC_verbose_${V_default}}
 CC_verbose_0 = @echo "  CC  $@";
 CC_verbose_1 =
 
-VPATH = $(srcdir)/string:$(srcdir)/errno:$(srcdir)/libgen
+VPATH = $(srcdir)/string:$(srcdir)/errno:$(srcdir)/stdlib:$(srcdir)/libgen
 INCLUDE_DIRS = -I$(top_srcdir)/$(host_cpu) -I$(srcdir)/../include -I$(srcdir)
 
 assemble.cmd = ${CC_verbose}${CC} ${CFLAGS} ${CPPFLAGS} ${INCLUDE_DIRS} -c -o $@ $<
