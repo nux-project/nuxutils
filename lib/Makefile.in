@@ -7,8 +7,11 @@ LIB = libutil.a
 LIB_SRC = basename.S \
 	dirname.S \
 	errno.S \
+	strlcat.S \
+	strlcpy.S \
 	strlen.S \
-	strtol.S
+	strtol.S \
+	strnlen.S
 LIB_OBJ = $(LIB_SRC:.S=.o)
 
 #
