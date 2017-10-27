@@ -35,7 +35,7 @@ strlcat:
 	pop	%rdi
 	push	%rax	/* save result of strnlen (src, size) */
 	subq	%rax, %rdx
-	leaq	-1(%rdi, %rax), %rdi
+	leaq	(%rdi, %rax), %rdi
 	call	strlcpy
 	pop	%rdx
 	addq	%rdx, %rax	/* add strlen (dst) to return value */
