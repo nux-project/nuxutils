@@ -63,6 +63,10 @@
 
 #define sys_sigaction __syscall(SYS_rt_sigaction)
 
+#define sys_stat __syscall(SYS_stat)
+
+#define sys_symlink __syscall(SYS_symlink)
+
 #define sys_sync __syscall(SYS_sync)
 
 #define sys_syncfs __syscall(SYS_syncfs)

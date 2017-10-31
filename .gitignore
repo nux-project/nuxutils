@@ -10,6 +10,7 @@ echo
 env
 false
 link
+ln
 logname
 mkdir
 printenv

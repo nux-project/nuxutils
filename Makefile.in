@@ -11,6 +11,7 @@ PROGS = basename \
 	env \
 	false \
 	link \
+	ln \
 	logname \
 	mkdir \
 	printenv \
@@ -93,6 +94,9 @@ false: false.o
 	$(link.cmd)
 
 link: link.o
+	$(link.cmd)
+
+ln: ln.o
 	$(link.cmd)
 
 logname: logname.o
