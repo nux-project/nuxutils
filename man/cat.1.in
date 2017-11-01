@@ -1,0 +1,45 @@
+.\" cat.1
+.\"
+.\" Copyright (c) 2017 Stefan Bidigaray
+.\"
+.\" This work is licensed under the Creative Commons Attribution-
+.\" ShareAlike 4.0 International License. To view a copy of this license,
+.\" visit http://creativecommons.org/licenses/by-sa/4.0/ or send a letter to
+.\" Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
+.Dd November 1, 2017
+.Dt CAT 1
+.Os "Nux Utilities" @VERSION@
+.Sh NAME
+.Nm cat
+.Nd cancatenate and print files to standard output
+.Sh SYNOPSIS
+.Nm
+.Op Fl u
+.Op Ar FILE ...
+.Sh DESCRIPTION
+Concatenate one or more
+.Ar FILE(s)
+to standard input. If no
+.Ar FILE
+is specified, or if
+.Ar FILE
+is a single dash
+.Sq - ,
+then standard input is read.
+.Pp
+.Bl -tag -width indent
+.It Fl u
+(ignored)
+.Sh EXAMPLES
+cat example.txt
+.Dl Print example.txt to standard output.
+.Pp
+cat example1.txt - example2.txt
+.Dl Print example1.txt, then standard input, then example2.txt to standard output.
+.Sh AUTHORS
+Written by Stefan Bidigaray.
+.Sh COPYRIGHT
+Copyright (c) 2017 Stefan Bidigaray. License MPLv2: Mozilla Public License,
+v. 2.0 <http://mozilla.org/MPL/2.0/>.
+.Sh SEE ALSO
+.Xr tac 1

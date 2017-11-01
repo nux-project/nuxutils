@@ -1,0 +1,38 @@
+.\" chroot.8
+.\"
+.\" Copyright (c) 2017 Stefan Bidigaray
+.\"
+.\" This work is licensed under the Creative Commons Attribution-
+.\" ShareAlike 4.0 International License. To view a copy of this license,
+.\" visit http://creativecommons.org/licenses/by-sa/4.0/ or send a letter to
+.\" Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
+.Dd November 1, 2017
+.Dt CHROOT 8
+.Os "Nux Utilities" @VERSION@
+.Sh NAME
+.Nm chroot
+.Nd run a command or interactive shell with a special root directory
+.Sh SYNOPSIS
+.Nm
+.Ar NEWROOT
+.Op Ar COMMAND Op Ar ARG...
+.Sh DESCRIPTION
+Run
+.Ar COMMAND
+with root directory set to
+.Ar NEWROOT .
+.Pp
+If no
+.Ar COMMAND
+is given, then run '/bin/sh -i'.
+.Sh EXAMPLES
+chroot /newroot
+.Dl run '/bin/sh -i' with root directory set to /newroot.
+.Pp
+chroot /newroot /usr/bin/python test.py
+.Dl run the command '/usr/bin/python test.py' with root directory set to /newroot.
+.Sh AUTHORS
+Written by Stefan Bidigaray.
+.Sh COPYRIGHT
+Copyright (c) 2017 Stefan Bidigaray. License MPLv2: Mozilla Public License,
+v. 2.0 <http://mozilla.org/MPL/2.0/>.
