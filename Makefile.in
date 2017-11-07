@@ -1,6 +1,5 @@
 #
 # Makefile for Nux Utilities
-# You must run ./configure to generate needed configuration
 #
 
 PROGS = basename \
@@ -29,6 +28,30 @@ PROGS_SRC = $(PROGS:=.S)
 
 LIB = lib/libutil.a
 LIB_CPPFLAGS = -I$(top_srcdir)/lib/$(host_cpu)
+
+#
+# Variables defined by configure script
+#
+CC = @CC@
+CFLAGS = @CFLAGS@
+CPPFLAGS = @CPPFLAGS@
+AR = @AR@
+VERSION = @VERSION@
+srcdir = @top_srcdir@/@host_cpu@
+top_srcdir = @top_srcdir@
+builddir = @builddir@
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+bindir = @bindir@
+sysconfdir = @sysconfdir@
+libdir = @libdir@
+includedir = @includedir@
+datarootdir = @datarootdir@
+mandir = @mandir@
+program_prefix = @program_prefix@
+build = @build@
+host = @host@
+host_cpu = @host_cpu@
 
 #
 # Verbose options

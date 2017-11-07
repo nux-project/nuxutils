@@ -3,10 +3,31 @@
 # Configure script for Nux Utilities
 #
 
-prog_name=${0}
-
+config_files="Makefile lib/Makefile"
 CC_list="gcc clang cc"
 configure_options="$@"
+
+subst_variables="CC
+CFLAGS
+CPPFLAGS
+AR
+VERSION
+builddir
+srcdir
+top_srcdir
+prefix
+exec_prefix
+bindir
+sbindir
+sysconfdir
+libdir
+includedir
+datarootdir
+mandir
+program_prefix
+build
+host
+host_cpu"
 
 #
 # Default values
@@ -17,6 +38,7 @@ builddir=
 prefix=/usr/local
 exec_prefix='${prefix}'
 bindir='${exec_prefix}/bin'
+sbindir='${exec_prefix}/sbin'
 sysconfdir='${prefix}/etc'
 libdir='${exec_prefix}/lib'
 includedir='${prefix}/include'
@@ -27,7 +49,7 @@ build=
 host=
 host_cpu=
 
-CONFFILE=conftest.c
+CONFTEST=conftest.c
 
 #
 # Helper functions
@@ -48,6 +70,7 @@ Installation directories:
 
 Fine tuning of the installation directories:
   --bindir=DIR		user executables [EPREFIX/bin]
+  --sbindir=DIR		system manager executables [EPREFIX/sbin]
   --sysconfdir=DIR	read-only single-machine data [PREFIX/etc]
   --libdir=DIR		object code libraries [EPREFIX/lib]
   --includedir=DIR	include files [PREFIX/include]
@@ -72,20 +95,22 @@ Use these variables to override the choices made by 'configure'.
 EOF
 }
 
-fail() {
-	printf "%s: %s\n" "$prog_name" "$*"
+msg_error() {
+	printf "%s: %s\n" "$0" "$*"
 	exit 1
 }
 
-checking() {
+msg_checking() {
 	printf "checking %s... " "$*"
 }
 
-result() {
+msg_result() {
 	printf "%s\n" "$*"
 }
 
 check_tool() {
+# $1 -> variable name
+# $2 -> program to check for
 	tool_name="$2"
 	if test -n "$host"; then
 		tool_name="${host}-${tool_name}"
@@ -102,15 +127,21 @@ run_cmd() {
 }
 
 add_cflag() {
-	checking "whether compiler accepts $1"
-	if $CC $CFLAGS $1 -c -o /dev/null $CONFFILE > /dev/null 2>&1 ; then
-		result "yes"
+	msg_checking "whether compiler accepts $1"
+	cat << EOF > $CONFTEST
+int main (void) {
+	return 0;
+}
+EOF
+	if $CC $CFLAGS $1 -c -o /dev/null $CONFTEST > /dev/null 2>&1 ; then
+		msg_result "yes"
 		CFLAGS="$CFLAGS $1"
 		eval "CFLAGS=\${CFLAGS# }"
 	else
-		result "no"
-		fail "compiler does not accept $1"
+		msg_result "no"
+		msg_error "compiler does not accept $1"
 	fi
+	rm -f $CONFTEST
 }
 
 create_file() {
@@ -126,6 +157,7 @@ for arg ; do
 		--prefix=*) prefix=${arg#*=} ;;
 		--exec-prefix=*) exec_prefix=${arg#*=} ;;
 		--bindir=*) bindir=${arg#*=} ;;
+		--sbindir=*) sbindir=${arg#*=} ;;
 		--sysconfdir=*) sysconfdir=${arg#*=} ;;
 		--libdir=*) libdir=${arg#*=} ;;
 		--includedir=*) includedir=${arg#*=} ;;
@@ -134,13 +166,13 @@ for arg ; do
 		--program-prefix=*) program_prefix=${arg#*=} ;;
 		--build=*) build=${arg#*=} ;;
 		--host=*) host=${arg#*=} ;;
-		-*) fail "unknown option '$arg'"; exit 1 ;;
+		-*) msg_error "unknown option '$arg'"; exit 1 ;;
 		CC=*) CC=${arg#*=} ;;
 		CFLAGS=*) CFLAGS=${arg#*=} ;;
 		CPPFLAGS=*) CPPFLAGS=${arg#*=} ;;
 		AR=*) AR=${arg#*=} ;;
 		*=*) ;;
-		*) fail "unknown argument '$arg'" ;;
+		*) msg_error "unknown argument '$arg'" ;;
 	esac
 done
 
@@ -148,7 +180,7 @@ done
 # Get the source dir for out-of-tree builds
 #
 top_srcdir="${0%/configure}"
-abs_srcdir="$(cd $top_srcdir && pwd)" || fail "invalid source directory '$top_srcdir'"
+abs_srcdir="$(cd $top_srcdir && pwd)" || msg_error "invalid source directory '$top_srcdir'"
 if test "$abs_srcdir" = "$(pwd)"; then
 	top_srcdir="."
 fi
@@ -157,7 +189,7 @@ builddir="."
 #
 # Find an appropriate C compiler
 #
-checking "for compiler"
+msg_checking "for compiler"
 if test -z $CC; then
 	for tryCC in $CC_list; do
 		check_tool "CC" "$tryCC"
@@ -166,50 +198,51 @@ if test -z $CC; then
 		fi
 	done
 fi
-result "$CC"
+msg_result "$CC"
 if test "x$CC" = "xunknown"; then
-	fail "could not find a supported compiler"
+	msg_error "could not find a supported compiler"
 fi
 
 #
 # Check that the compiler can actually assemble programs
 #
-checking "whether the compiler works"
-cat << EOF > $CONFFILE
+msg_checking "whether the compiler works"
+cat << EOF > $CONFTEST
 int main (void) {
 	return 0;
 }
 EOF
-if run_cmd "$CC -c -o /dev/null $CONFFILE" ; then
-	result "yes"
+if run_cmd "$CC -c -o /dev/null $CONFTEST" ; then
+	msg_result "yes"
 else
-	result "no"
-	fail "compiler cannot create executables"
+	msg_result "no"
+	msg_error "compiler cannot create executables"
 fi
+rm -f $CONFTEST
 
 #
 # Check other tools
 #
-checking "for ar"
+msg_checking "for ar"
 check_tool "AR" "ar"
-result "$AR"
+msg_result "$AR"
 if test "x$AR" = "xunknown"; then
-	fail "could not find ranlib"
+	msg_error "could not find ranlib"
 fi
 
 #
 # Check the host architecture
 #
-checking "host system type"
+msg_checking "host system type"
 if test -z "$host"; then
 	host=$($CC -dumpmachine 2> /dev/null) || host="unknown"
 fi
-result "$host"
+msg_result "$host"
 
 case $host in
 	x86_64-*) host_cpu="x86_64" ;;
-	unknown) fail "unable to detect host architecture; try $0 --host=..." ;;
-	*) fail "unknown or unsupported host '$host'" ;;
+	unknown) msg_error "unable to detect host architecture; try $0 --host=..." ;;
+	*) msg_error "unknown or unsupported host '$host'" ;;
 esac
 
 #
@@ -217,68 +250,19 @@ esac
 #
 add_cflag "-Wall"
 add_cflag "-Werror"
-rm -f $CONFFILE
 
-Version=$(cat ${top_srcdir}/Version)
+VERSION=$(cat ${top_srcdir}/Version)
 
-#
-# Output configured files
-#
-create_file "Makefile"
-cat - $top_srcdir/Makefile.in << EOF > Makefile
-# Command used to configure and generate:
-configure_options = $configure_options
-
-CC = $CC
-CFLAGS = $CFLAGS
-CPPFLAGS = $CPPFLAGS
-AR = $AR
-VERSION = $Version
-srcdir = $top_srcdir/$host_cpu
-top_srcdir = $top_srcdir
-builddir = $builddir
-prefix = $prefix
-exec_prefix = $exec_prefix
-bindir = $bindir
-sysconfdir = $sysconfdir
-libdir = $libdir
-includedir = $includedir
-datarootdir = $datarootdir
-mandir = $mandir
-program_prefix = $program_prefix
-build = $build
-host = $host
-host_cpu = $host_cpu
-
-EOF
-
-create_file "lib/Makefile"
-if test ! -d lib; then
-	mkdir lib
-fi
-cat - $top_srcdir/lib/Makefile.in << EOF > lib/Makefile
-# Command used to configure and generate:
-configure_options = $configure_options
-
-CC = $CC
-CFLAGS = $CFLAGS
-CPPFLAGS = $CPPFLAGS
-AR = $AR
-VERSION = $Version
-srcdir = $top_srcdir/../lib/$host_cpu
-top_srcdir = $top_srcdir/..
-builddir = $builddir
-prefix = $prefix
-exec_prefix = $exec_prefix
-bindir = $bindir
-sysconfdir = $sysconfdir
-libdir = $libdir
-includedir = $includedir
-datarootdir = $datarootdir
-mandir = $mandir
-program_prefix = $program_prefix
-build = $build
-host = $host
-host_cpu = $host_cpu
-
-EOF
+for config_file in $config_files; do
+	create_file "$config_file"
+	subdir="$(dirname $config_file)"
+	if test ! -d $subdir; then
+		mkdir -p $subdir
+	fi
+	for subst_var in $subst_variables; do
+		eval "subst_val=\"\${$subst_var}\""
+		subst_val=$(echo $subst_val | sed 's/\//\\\//g')
+		sed_scripts="$sed_scripts s/@${subst_var}@/${subst_val}/g; "
+	done
+	sed "$sed_scripts" $top_srcdir/$config_file.in > $builddir/$config_file
+done

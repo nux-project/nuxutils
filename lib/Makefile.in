@@ -1,6 +1,5 @@
 #
 # Makefile for Nux Utility Library
-# You must run ./configure an the top-level source dir to generate
 #
 
 LIB = libutil.a
@@ -13,6 +12,30 @@ LIB_SRC = basename.S \
 	strtol.S \
 	strnlen.S
 LIB_OBJ = $(LIB_SRC:.S=.o)
+
+#
+# Variables defined by configure script
+#
+CC = @CC@
+CFLAGS = @CFLAGS@
+CPPFLAGS = @CPPFLAGS@
+AR = @AR@
+VERSION = @VERSION@
+srcdir = @top_srcdir@/../lib/@host_cpu@
+top_srcdir = @top_srcdir@/..
+builddir = @builddir@
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+bindir = @bindir@
+sysconfdir = @sysconfdir@
+libdir = @libdir@
+includedir = @includedir@
+datarootdir = @datarootdir@
+mandir = @mandir@
+program_prefix = @program_prefix@
+build = @build@
+host = @host@
+host_cpu = @host_cpu@
 
 #
 # Verbose options
