@@ -1,0 +1,34 @@
+.\" echo.1
+.\"
+.\" Copyright (c) 2017 Stefan Bidigaray
+.\"
+.\" This work is licensed under the Creative Commons Attribution-
+.\" ShareAlike 4.0 International License. To view a copy of this license,
+.\" visit http://creativecommons.org/licenses/by-sa/4.0/ or send a letter to
+.\" Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
+.Dd November 7, 2017
+.Dt ECHO 1
+.Os "Nux Utilities" @VERSION@
+.Sh NAME
+.Nm echo
+.Nd write arguments to standard output
+.Sh SYNOPSIS
+.Nm
+.Op Fl n
+.Op Ar STRING ...
+.Sh DESCRIPTION
+Write the
+.Ar STRING
+to standard output. If the first argument starts with a dash
+.Pq Ql - ,
+then a newline character is NOT added to the end of the string.
+.Bl -tag -width flag
+.It Fl n
+Do not append trailing newline character
+.Sh AUTHORS
+Written by Stefan Bidigaray.
+.Sh COPYRIGHT
+Copyright (c) 2017 Stefan Bidigaray. License MPLv2: Mozilla Public License,
+v. 2.0 <http://mozilla.org/MPL/2.0/>.
+.Sh SEE ALSO
+.Xr printf 1

@@ -1,0 +1,29 @@
+.\" true.1
+.\"
+.\" Copyright (c) 2017 Stefan Bidigaray
+.\"
+.\" This work is licensed under the Creative Commons Attribution-
+.\" ShareAlike 4.0 International License. To view a copy of this license,
+.\" visit http://creativecommons.org/licenses/by-sa/4.0/ or send a letter to
+.\" Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
+.Dd November 7, 2017
+.Dt FALSE 1
+.Os "Nux Utilities" @VERSION@
+.Sh NAME
+.Nm true
+.Nd return true value
+.Sh SYNOPSIS
+.Nm
+.Sh DESCRIPTION
+Exit with a status code of zero.
+.Pp
+NOTE: Some shells provide a built-in version of the 
+.Nm
+command which supersedes this version of the utility.
+.Sh AUTHORS
+Written by Stefan Bidigaray.
+.Sh COPYRIGHT
+Copyright (c) 2017 Stefan Bidigaray. License MPLv2: Mozilla Public License,
+v. 2.0 <http://mozilla.org/MPL/2.0/>.
+.Sh SEE ALSO
+.Xr false 1
